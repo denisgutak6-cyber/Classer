@@ -3,8 +3,8 @@ import os
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
 
 import pygame
-import lang_json_path
-from . import jsonplus
+from ..VGUI import Lang
+from ..VGUI import TextWindow
 
 # Ініціалізація мікшера pygame з оптимальними налаштуваннями буфера
 pygame.mixer.pre_init(44100, -16, 2, 512)
@@ -24,7 +24,7 @@ def play_audio(file_path: str, volume: float, loop: bool, layer_name: str):
     :param layer_name: Унікальне ім'я шару для керування звуком
     """
     if not os.path.exists(file_path):
-        print(jsonplus.json_returner(lang_json_path.main_lang_path, "error_file_not_found") + file_path)
+        TextWindow.cr_window("ЗАГЛУШКА", "ЗАГЛУШКА", 0)
         return
 
     try:
@@ -37,7 +37,7 @@ def play_audio(file_path: str, volume: float, loop: bool, layer_name: str):
         # Знаходимо вільний канал для відтворення
         channel = pygame.mixer.find_channel()
         if channel is None:
-            print(jsonplus.json_returner(lang_json_path.main_lang_path, "error_no_audio_channels"))
+            TextWindow.cr_window("ЗАГЛУШКА", "ЗАГЛУШКА", 0)
             return
 
         loops_count = -1 if loop else 0
@@ -47,7 +47,7 @@ def play_audio(file_path: str, volume: float, loop: bool, layer_name: str):
         _active_layers[layer_name] = channel
 
     except Exception as e:
-        print(jsonplus.json_returner(lang_json_path.main_lang_path, "error_play") + e)
+        TextWindow.cr_window("ЗАГЛУШКА", "ЗАГЛУШКА", 0)
 
 
 def stop_audio(layer_name: str = "", all_sounds: bool = False):
@@ -71,4 +71,4 @@ def stop_audio(layer_name: str = "", all_sounds: bool = False):
                 channel.stop()
             del _active_layers[layer_name]
         else:
-            print(jsonplus.json_returner(lang_json_path.main_lang_path, "error_channel_not_found_1") + layer_name + jsonplus.json_returner(lang_json_path.main_lang_path, "error_channel_not_found_2"))
+            TextWindow.cr_window("ЗАГЛУШКА", "ЗАГЛУШКА", 0)
